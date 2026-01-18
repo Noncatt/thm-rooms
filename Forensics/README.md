@@ -17,6 +17,8 @@ python vol.py -f <filename>.raw windows.pslist
 
 <img width="1208" height="38" alt="image-1" src="https://github.com/user-attachments/assets/a2357a68-6c87-4f37-9cd4-a4f5513a19d7" />
 
+<span style="line-height:0.5;">&nbsp;</span>
+
 ## Task 2
 
 ### There are many suspicious open ports; which one is it? (ANSWER format: protocol:port)
@@ -38,6 +40,8 @@ python vol.py -f <filename>.raw windows.malfind > malfind.txt
 <img width="1103" height="37" alt="image-4" src="https://github.com/user-attachments/assets/ea2e0937-ee2d-49d4-ab9c-20c76f7640f9" />
 
 <img width="1038" height="67" alt="image-5" src="https://github.com/user-attachments/assets/597fa25e-0c52-4cf8-9e40-51e9c23c031f" />
+
+<span style="line-height:0.5;">&nbsp;</span>
 
 ## IOC SAGA
 
