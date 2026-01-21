@@ -1,9 +1,9 @@
 # UltraTech Report
 
-## 1. Summary
+## Summary
 A command-injection flaw in the Node.js API running on TCP 8081 allowed remote code execution, disclosure of a SQLite database containing unsalted MD5 password hashes, and subsequent SSH access as a regular user. Membership of that user in the docker group enabled privilege escalation to root and extraction of the root user’s private SSH key. 
 
----
+<span>&nbsp;</span>
 
 | Risk  | Impact | Severity |
 | --- | --- | --- |
@@ -11,13 +11,13 @@ A command-injection flaw in the Node.js API running on TCP 8081 allowed remote c
 
 <span>&nbsp;</span>
 
-## 2. Scope
+## Scope
 The assessment was limited to a single internet-accessible Linux host at IP `10.10.106.75`. Black-box testing - no credentials were provided. 
 
 
 <span>&nbsp;</span>
 
-## 3. Methodology
+## Methodology
 - Enumeration
 - Vulnerability Analysis
 - Exploitation
@@ -26,7 +26,7 @@ The assessment was limited to a single internet-accessible Linux host at IP `10.
 
 <span>&nbsp;</span>
 
-## 4. Environment Overview
+## Environment Overview
 The target environment consists of a single Ubuntu-based Linux host. The system runs several services, including a vulnerable Node.js API and an Apache HTTP server on a non-standard port. Enumeration revealed the following:
 
 | Port | Service         | Version         | Notes                             |
@@ -42,8 +42,8 @@ The target environment consists of a single Ubuntu-based Linux host. The system 
 
 <span>&nbsp;</span>
 
-## 5. Findings
-### 5.1 Remote Code Execution in `/ping` endpoint
+## Identified Vulnerabilities
+### Remote Code Execution in `/ping` endpoint
 - **Vector:**  Unfiltered back-tick expansion inside ip parameter. 
 
 - **Proof of Concept:** 
@@ -55,11 +55,9 @@ The target environment consists of a single Ubuntu-based Linux host. The system 
 
 - **Impact:** Arbitrary command execution with Node.js service account privileges.
 
-- **Severity:** Critical
-
 <span>&nbsp;</span>
 
-### 5.2 SQLite Database Disclosure
+### SQLite Database Disclosure
 - **Vector:** RCE used to list files, revealing utech.db.sqlite.  
 
 - **Proof of Concept:** 
@@ -68,11 +66,9 @@ The target environment consists of a single Ubuntu-based Linux host. The system 
     ```
 - **Impact:** Download of full credential store.
 
-- **Severity:** High
-
 <span>&nbsp;</span>
 
-### 5.3 Weak Password Storage and Cracking
+### Weak Password Storage and Cracking
 - **Vector:** Unsalted MD5 hashes stored in the SQLite users table.
 - **Proof of Concept:**
     ```BASH
@@ -82,11 +78,9 @@ The target environment consists of a single Ubuntu-based Linux host. The system 
 
 - **Impact:** Disclosure of credentials enables direct SSH login.
 
-- **Severity:** High
-
 <span>&nbsp;</span>
 
-## 5.4 Privilege Escalation via docker Group
+## Privilege Escalation via docker Group
 - **Vector:** User r00t is in docker group
 
 - **Proof of Concept:**
@@ -98,11 +92,9 @@ The target environment consists of a single Ubuntu-based Linux host. The system 
 
 - **Impact:** Full root control of the underlying host
 
-- **Severity:** Critical
-
 <span>&nbsp;</span>
 
-## 5.5 Exposure of Root Private SSH Key
+## Exposure of Root Private SSH Key
 - **Vector:** Root shell from 5.4 grants read access to /root/.ssh
 
 - **Proof of Concept:**
@@ -110,8 +102,6 @@ The target environment consists of a single Ubuntu-based Linux host. The system 
     cat /root/.ssh/id_rsa | head -n1
     ```
 - **Impact:** Unrestricted key-based SSH access wherever the key is trusted
-
-- **Severity:** Critical
 
 <span>&nbsp;</span>
 
