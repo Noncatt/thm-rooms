@@ -1,122 +1,8 @@
-# Anthem Report 
-
-## Summary
-A misconfigured Umbraco CMS installation running on TCP 80 allowed disclosure of sensitive credentials via predictable files, administrative account compromise, and subsequent RDP access to a Windows machine. Insufficient file system permissions enabled local privilege escalation to retrieve administrative passwords and full control over the host.
-
-<span>&nbsp;</span>
-
-| Risk  | Impact | Severity |
-| --- | --- | --- |
-| Remote Desktop compromise | Full system access | Critical
-| Misconfigured file permissions | Privilege escalation | High
-
-<span>&nbsp;</span>
-
-## Scope
-The assessment was limited to a single internet-accessible Windows host at IP 10.10.x.x. Black-box testing — no credentials or prior knowledge provided.
-
-<span>&nbsp;</span>
-
-## Methodology
-- Enumeration
-- Vulnerability Analysis
-- Exploitation
-- Privilege Escalation
-- Post-Exploitation
-
-<span>&nbsp;</span>
-
-## Environment Overview
-The target environment consists of a single Windows-based machine running vulnerable web services. Enumeration revealed the following:
-
-Port | Service | Version |
-| --- | --- | --- | 
-80 | Microsoft HTTPAPI httpd 2.0 | Windows internal web service |
-3389 | Microsoft Terminal Services | RDP |
-5985 | Microsoft HTTPAPI httpd 2.0 | WinRM service |
-
-- Operating System: Microsoft Windows (version unspecified)
-- CMS: Umbraco (hosted on internal HTTP server)
-- Remote Management: RDP and WinRM exposed
-- Backup Files: Located in `C:\backup\`
-
-<span>&nbsp;</span>
-
-## Identified Vulnerabilities
-### Discovery of Hardcoded Password in robots.txt
-- **Vector:** Accessible robots.txt file disclosed a plaintext password.  
-
-- **Proof of Concept**:   
-
-    ```
-    http://$ip/robots.txt 
-    ```
-    contains password `UmbracoIsTheBest!`  
-
-- **Impact:** Knowledge of internal password aiding in further authentication attempts.  
-
-<span>&nbsp;</span>
-
-### Enumeration of Administrator Identity and Email
-- **Vector:** Public pages contained administrator's email pattern.
-
-- **Proof of Concept:** The hiring post references initials for email on employees and poem matched the administrator `Solomon Grundy`.
-
-- **Impact:** Identification of privileged account for credential guessing or phishing.
-
-<span>&nbsp;</span>
-
-### Retrieval of Hidden Flags through Source Inspection and Directory Enumeration
-- **Vector:** Hidden flags embedded in source code and obscure directories.
-
-- **Proof of Concept:** Page source inspection revealed flags like THM{G!T_G00D} and Gobuster enumeration of /authors revealed hidden content
-
-- **Impact:** No direct security risk. Task-specific discovery.
-
-<span>&nbsp;</span>
-
-### RDP Access with Recovered Credentials
-- **Vector:** Using credentials obtained through earlier enumeration, authenticated via RDP.
-
-- **Proof of Concept:**
-```BASH
-rdesktop $ip
-Username: SG
-Password: UmbracoIsTheBest!
-```
-
-- **Impact: Full desktop access as a regular user.**
-
-<span>&nbsp;</span>
-
-### Privilege Escalation via File System Permission Misconfigurations
-- **Vector:** Backup file restore.txt had misconfigured permissions allowing standard users to grant themselves access.
-
-- **Proof of Concept:**
-    - Navigate to C:\backup
-    - Modify file permissions via GUI
-    - Access restore.txt
-    - Password: `ChangeMeBaby1MoreTime`
-
-- **Impact:** Elevation to local administrator privileges.
-
-<span>&nbsp;</span>
-
-### Root Flag Retrieval as Administrator
-- **Vector:** Login as Administrator
-
-- **Proof of Concept:** Retrieve root.txt directly from Administrator Desktop.
-
-- **Impact:** Complete system takeover.
-
-<span>&nbsp;</span>
-
-## Walktrough
 Run an Nmap service scan to identify open ports and running services:
 ```BASH
 sudo nmap -sV -p- $ip
 ```
-![alt text](image.png)
+<img width="640" height="180" alt="image" src="https://github.com/user-attachments/assets/6cff7d9e-daf5-41f1-9d2b-65a662bf4619" />
 
 <span>&nbsp;</span>
 
@@ -133,7 +19,8 @@ sudo nmap -sV -p- $ip
 ### What is a possible password in one of the pages web crawlers check for?
 Web crawlers check for `robots.txt` so go there.    
 
-![alt text](image-3.png)
+<img width="622" height="239" alt="image-3" src="https://github.com/user-attachments/assets/5e2b335c-24af-4b77-ab4b-e4479950d391" />
+
 <pre>UmbracoIsTheBest!</pre>
 
 <span>&nbsp;</span>
@@ -150,7 +37,9 @@ Web crawlers check for `robots.txt` so go there.
 
 ### What's the name of the Administrator
 For this one you have to search poem in search engine. 
-![alt text](image-5.png)
+
+<img width="753" height="138" alt="image-5" src="https://github.com/user-attachments/assets/8cc6ec5d-6d4f-4d1b-bf12-8abf3c5dfab2" />
+
 <pre>Solomon Grundy</pre>
 
 <span>&nbsp;</span>
@@ -165,30 +54,39 @@ Use Gobuster to enumerate hidden directories:
 ```BASH
 gobuster dir -u "http://10.10.50.147/" -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 64
 ```
-![alt text](image-7.png)
+<img width="612" height="327" alt="image-7" src="https://github.com/user-attachments/assets/04766091-776a-45eb-a325-201fabac5d65" />
 
 <span>&nbsp;</span>
 
 ## Spot the flags
 
 What is flag 1?
-![alt text](image-6.png)  
-THM{L0L_WH0_US3S_M3T4}
+
+<img width="624" height="208" alt="image-6" src="https://github.com/user-attachments/assets/36f6972f-8934-4d44-9086-3b3ac92c04f0" />
+
+<span>&nbsp;</span>
 
 What is flag 2?
-There is second flag, in page view source:    
-![alt text](image-1.png)
-THM{G!T_G00D}
+
+There is second flag, in page view source:  
+
+<img width="884" height="117" alt="image-1" src="https://github.com/user-attachments/assets/e97286ef-b191-4da7-84f5-4d8306e39f25" />
+
+<span>&nbsp;</span>
 
 What is flag 3?
+
 Enumerate website using gobuster. One from many directories will be `/authors` directory, here is third flag.
-![alt text](image-2.png)
-THM{L0L_WH0_D15}  
+
+<img width="716" height="611" alt="image-2" src="https://github.com/user-attachments/assets/b8578f41-4abb-4225-9124-7451339807d3" />
+
+<span>&nbsp;</span>
 
 What is flag 4?
+
 The same as second flag, from view page source.
-![alt text](image-4.png)
-THM{AN0TH3R_M3TA}
+
+<img width="753" height="225" alt="image-4" src="https://github.com/user-attachments/assets/30a4fc88-4b30-4047-8424-cf3e55cb609d" />
 
 <span>&nbsp;</span>
 
@@ -201,34 +99,36 @@ Install rdesktop to log in to Windows machine with gained credentials.
 sudo apt install rdesktop
 rdesktop $ip
 ```
-![alt text](image-9.png)
-<pre>THM{N00T_NO0T}</pre>
+
+<img width="805" height="513" alt="image-9" src="https://github.com/user-attachments/assets/55a58947-ce80-4225-8b75-dc054565ea8b" />
 
 ### Can we spot the admin password?
 
-![alt text](image-10.png)  
+<img width="760" height="410" alt="image-10" src="https://github.com/user-attachments/assets/4f382dee-59ae-4eee-8fc9-2b7423be69b6" />
 
 Looks like C:\backup\ contains backup files. Go to backup directory:  
 
-![alt text](image-11.png)
+<img width="433" height="234" alt="image-11" src="https://github.com/user-attachments/assets/7bbed321-588e-4c54-b66f-3c1391e0575c" />
 
 Access is denied to read file.  
 
-![alt text](image-12.png)
+<img width="428" height="43" alt="image-12" src="https://github.com/user-attachments/assets/3629727e-205e-4622-8deb-61f4ba52882e" />
 
 In file explorer go to where restore.txt stayes. Click properties -> Security. Edit Group or user names. In popu window Add new user `WIN-LU09299160F\SG`. 
-![alt text](image-13.png)
+
+<img width="445" height="244" alt="image-13" src="https://github.com/user-attachments/assets/eb716d86-6fd3-4d59-a451-f5ae9fc1fd03" />
 
 Click save and gave yourself all permissions:
-![alt text](image-14.png)
+
+<img width="333" height="158" alt="image-14" src="https://github.com/user-attachments/assets/8639be12-5cf6-4d83-8973-16f837700a32" />
 
 <pre>ChangeMeBaby1MoreTime</pre>
 
 ### Escalate your privileges to root, what is the contents of root.txt?
-Relog yourself as administrator. On desktop there is root file:  
+Relog yourself as administrator. On desktop there is root file with flag:  
 
-![alt text](image-15.png)
-<pre>THM{Y0U_4R3_1337}</pre>
+<img width="840" height="481" alt="image-15" src="https://github.com/user-attachments/assets/b6fe4a6f-c72a-4800-8668-284eb3915ae1" />
+
 
 
 
